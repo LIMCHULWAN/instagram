@@ -23,6 +23,10 @@ urlpatterns = [
         "images/",
         include("instagram.images.urls", namespace="images"),
     ),
+    path(
+        "notifications/",
+        include("instagram.notifications.urls", namespace="notifications"),
+    ),
     path("accounts/", include("allauth.urls")),
     # Your stuff: custom urls includes go here
 ] + static(
