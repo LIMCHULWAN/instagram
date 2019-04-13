@@ -6,7 +6,7 @@ from instagram.users import models as user_models
 from instagram.users import serializers as user_serializers
 from instagram.notifications import views as notification_views
 
-class Feed(APIView):
+class Images(APIView):
 
     def get(self, request, format=None):
 
@@ -36,36 +36,51 @@ class Feed(APIView):
 
         return Response(serializer.data)
 
+    def post(self, request, format=None):
 
-class ListAllImages(APIView):
+        user = request.user
 
-    def get(self, request, format=None):
+        serializer = serializers.InputImageSerializer(data=request.data)
 
-        all_images = models.Image.objects.all()
+        if serializer.is_valid():
 
-        serializer = serializers.ImageSerializer(all_images, many=True)
+            serializer.save(creator=user)
 
-        return Response(data=serializer.data)
+            return Response(data=serializer.data, status=status.HTTP_201_CREATED)
 
-class ListAllComments(APIView):
+        else:
+
+            return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+# class ListAllImages(APIView):
+
+#     def get(self, request, format=None):
+
+#         all_images = models.Image.objects.all()
+
+#         serializer = serializers.ImageSerializer(all_images, many=True)
+
+#         return Response(data=serializer.data)
+
+# class ListAllComments(APIView):
     
-    def get(self, request, format=None):
+#     def get(self, request, format=None):
 
-        all_comments = models.Comment.objects.all()
+#         all_comments = models.Comment.objects.all()
 
-        serializer = serializers.CommentSerializer(all_comments, many=True)
+#         serializer = serializers.CommentSerializer(all_comments, many=True)
 
-        return Response(data=serializer.data)
+#         return Response(data=serializer.data)
 
-class ListAllLikes(APIView):
+# class ListAllLikes(APIView):
 
-    def get(self, request, format=None):
+#     def get(self, request, format=None):
 
-        all_likes = models.Like.objects.all()
+#         all_likes = models.Like.objects.all()
 
-        serializer = serializers.LikeSerializer(all_likes, many=True)
+#         serializer = serializers.LikeSerializer(all_likes, many=True)
 
-        return Response(data=serializer.data)
+#         return Response(data=serializer.data)
 
 class LikeImage(APIView):
 
